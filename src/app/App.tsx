@@ -63,7 +63,7 @@ function LoginTerminal({ onLogin }: { onLogin: () => void }) {
   );
 }
 
-/* // --- VINTAGE LANDING PAGE ---
+// --- VINTAGE LANDING PAGE ---
 function LandingPage({ onEnter }: { onEnter: () => void }) {
   return (
     <div className="fixed inset-0 z-[1000] bg-[#0a0908] flex flex-col items-center justify-center overflow-hidden">
@@ -80,7 +80,7 @@ function LandingPage({ onEnter }: { onEnter: () => void }) {
       </div>
     </div>
   );
-} */
+}
 
 // --- MOVIE MODAL ---
 function MovieModal({ movie, onClose, toggleFavorite, isFavorite, toggleWatchlist, isWatchlisted }: any) {
