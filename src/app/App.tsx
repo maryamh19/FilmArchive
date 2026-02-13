@@ -5,7 +5,7 @@ import {
   Bookmark, ShieldCheck, LogOut, Lock, KeyRound, Settings 
 } from 'lucide-react';
 
-/* // --- DECORATIVE FILTERS ---
+// --- DECORATIVE FILTERS ---
 function GrainOverlay({ active }: { active: boolean }) {
   if (!active) return null;
   return (
@@ -20,7 +20,7 @@ function GrainOverlay({ active }: { active: boolean }) {
     </div>
   );
 }
- */
+
 // --- LOGIN COMPONENT ---
 function LoginTerminal({ onLogin }: { onLogin: () => void }) {
   const [pass, setPass] = useState('');
