@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MovieShelf from './components/MovieShelf';
+import { useTranslation } from 'react-i18next';
+import '../i18n'; 
 import { 
   Search, Film, Heart, X, Play, Star, User, LayoutGrid, Menu, 
-  Bookmark, ShieldCheck, LogOut, Lock, KeyRound, Settings 
+  Bookmark, ShieldCheck, LogOut, Lock, KeyRound, Settings, Languages 
 } from 'lucide-react';
 
 // --- DECORATIVE FILTERS ---
@@ -23,6 +25,7 @@ function GrainOverlay({ active }: { active: boolean }) {
 
 // --- LOGIN COMPONENT ---
 function LoginTerminal({ onLogin }: { onLogin: () => void }) {
+  const { t } = useTranslation();
   const [pass, setPass] = useState('');
   const [error, setError] = useState(false);
 
@@ -44,8 +47,8 @@ function LoginTerminal({ onLogin }: { onLogin: () => void }) {
           <div className="inline-block p-4 border border-[#c4a484]/20 rounded-full mb-4">
             <Lock className="text-[#c4a484]" size={32} />
           </div>
-          <h2 className="text-2xl font-serif uppercase tracking-[0.3em] text-[#c4a484]">Restricted Access</h2>
-          <p className="text-[#c4a484]/40 text-[10px] uppercase tracking-widest font-mono">Enter Archive Credentials</p>
+          <h2 className="text-2xl font-serif uppercase tracking-[0.3em] text-[#c4a484]">{t('vault_access')}</h2>
+          <p className="text-[#c4a484]/40 text-[10px] uppercase tracking-widest font-mono">{t('enter_code')}</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input 
@@ -56,7 +59,7 @@ function LoginTerminal({ onLogin }: { onLogin: () => void }) {
             value={pass}
             onChange={(e) => setPass(e.target.value)}
           />
-          <button className="w-full py-4 text-[10px] font-bold uppercase tracking-[0.5em] text-[#1a1612] bg-[#c4a484] hover:bg-white transition-colors">Initialize Session</button>
+          <button className="w-full py-4 text-[10px] font-bold uppercase tracking-[0.5em] text-[#1a1612] bg-[#c4a484] hover:bg-white transition-colors">{t('init_session')}</button>
         </form>
       </div>
     </div>
@@ -161,6 +164,7 @@ function ChangePassModal({ onClose }: { onClose: () => void }) {
 
 // --- MAIN APP ---
 function App() {
+  const { t, i18n } = useTranslation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLanding, setShowLanding] = useState(true);
   const [theme, setTheme] = useState<'dark' | 'light'>(() => (localStorage.getItem('archive_theme') as any) || 'dark');
@@ -172,6 +176,7 @@ function App() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchTrigger, setSearchTrigger] = useState('');
   const [currentView, setCurrentView] = useState<'home' | 'profile' | 'watchlist' | 'favorites' | 'settings'>('home');
+  const [sortBy, setSortBy] = useState<'year' | 'rating' | 'default'>('default');
   
   const [favorites, setFavorites] = useState<string[]>([]);
   const [watchlist, setWatchlist] = useState<string[]>([]);
@@ -214,6 +219,14 @@ function App() {
     const timer = setTimeout(fetchSuggestions, 300);
     return () => clearTimeout(timer);
   }, [query]);
+
+  // NEW UPDATED LANGUAGE TOGGLE: Cycles through en, es, fr, de
+  const toggleLanguage = () => {
+    const langs = ['en', 'es', 'fr', 'de'];
+    const currentIndex = langs.indexOf(i18n.language);
+    const nextIndex = (currentIndex + 1) % langs.length;
+    i18n.changeLanguage(langs[nextIndex]);
+  };
 
   const logout = () => {
     setIsLoggedIn(false);
@@ -297,6 +310,10 @@ function App() {
                   </div>
                 )}
               </form>
+              <button onClick={toggleLanguage} className="p-2.5 border border-current/20 rounded hover:bg-current/10 transition-colors flex items-center gap-2">
+                <Languages size={18}/>
+                <span className="text-[8px] font-bold uppercase">{i18n.language}</span>
+              </button>
               <button onClick={() => setIsSidebarOpen(true)} className="bg-[#c4a484] text-[#1a1612] px-4 py-2.5 rounded font-bold text-[10px] uppercase tracking-widest flex items-center gap-2"><Heart size={14} fill="currentColor" /> ({favorites.length})</button>
             </div>
           </div>
@@ -304,6 +321,28 @@ function App() {
       </header>
 
       <main className="flex-1 py-12 px-6 md:px-10 max-w-[1400px] mx-auto w-full z-10">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-current/20 pb-4 gap-4">
+            <h2 className="text-xs uppercase tracking-[0.5em] font-bold">
+              {searchTrigger ? `${t('search')}: ${searchTrigger}` : 
+               currentView === 'home' ? t('essentials') : 
+               currentView === 'watchlist' ? 'Watchlist' : 
+               currentView === 'favorites' ? 'Curated' : 
+               currentView}
+            </h2>
+            <div className="flex items-center gap-4">
+              <span className="text-[10px] uppercase tracking-widest opacity-40 font-bold">{t('order_by')}:</span>
+              <select 
+                value={sortBy} 
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="bg-transparent text-[10px] uppercase tracking-widest font-bold border-b border-current/20 focus:outline-none cursor-pointer hover:text-[#c4a484] transition-colors"
+              >
+                <option value="default" className="bg-[#1a1612]">{t('default')}</option>
+                <option value="year" className="bg-[#1a1612]">{t('release')}</option>
+                <option value="rating" className="bg-[#1a1612]">{t('score')}</option>
+              </select>
+            </div>
+        </div>
+
         {currentView === 'settings' ? (
           <div className="max-w-2xl mx-auto space-y-10 animate-in fade-in">
             <h2 className="text-4xl font-bold uppercase tracking-tighter border-b border-current/20 pb-6">System Settings</h2>
@@ -350,25 +389,23 @@ function App() {
           </div>
         ) : currentView === 'favorites' ? (
           <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">Restricted: Curated Collection</h2>
-            <MovieShelf ids={favorites} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} isGrid />
+            <MovieShelf ids={favorites} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} isGrid sortBy={sortBy} />
           </section>
         ) : currentView === 'watchlist' ? (
           <section className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">Log: Future Screenings</h2>
-            <MovieShelf ids={watchlist} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} isGrid />
+            <MovieShelf ids={watchlist} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} isGrid sortBy={sortBy} />
           </section>
         ) : (
           <div className="space-y-24">
             {searchTrigger ? (
-              <section><h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">Search: {searchTrigger}</h2><MovieShelf searchKeyword={searchTrigger} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} isGrid /></section>
+              <section><MovieShelf searchKeyword={searchTrigger} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} isGrid sortBy={sortBy} /></section>
             ) : (
               <>
-                <section><h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">I. The Essentials</h2><MovieShelf ids={top20} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} /></section>
-                <section><h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">II. Sci-Fi Masterpieces</h2><MovieShelf ids={scifiModern} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} /></section>
-                <section><h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">III. Crime & Drama</h2><MovieShelf ids={crimeDrama} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} /></section>
-                <section><h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">IV. Mystery & Thrills</h2><MovieShelf ids={mysteryThrills} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} /></section>
-                <section><h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">V. Animation & World</h2><MovieShelf ids={animationWorld} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} /></section>
+                <section><MovieShelf ids={top20} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} sortBy={sortBy} /></section>
+                <section><h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">{t('scifi')}</h2><MovieShelf ids={scifiModern} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} sortBy={sortBy} /></section>
+                <section><h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">{t('crime')}</h2><MovieShelf ids={crimeDrama} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} sortBy={sortBy} /></section>
+                <section><h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">{t('mystery')}</h2><MovieShelf ids={mysteryThrills} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} sortBy={sortBy} /></section>
+                <section><h2 className="text-xs uppercase tracking-[0.5em] mb-10 border-b border-current/20 pb-4 font-bold">{t('animation')}</h2><MovieShelf ids={animationWorld} favorites={favorites} toggleFavorite={toggleFavorite} onOpenMovie={setSelectedMovie} sortBy={sortBy} /></section>
               </>
             )}
           </div>
@@ -381,7 +418,7 @@ function App() {
       <div className={`fixed top-0 right-0 h-full w-full sm:w-80 border-l z-[300] transform transition-transform duration-500 ${theme === 'dark' ? 'bg-[#14110e] border-[#5c3a1e]' : 'bg-[#ebe7de] border-[#dcd7cc]'} ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="p-6 h-full flex flex-col">
           <div className="flex justify-between items-center mb-8 border-b border-current/10 pb-4"><div className="flex items-center gap-2 uppercase tracking-widest font-bold text-xs"><Heart size={14} fill="currentColor" /> Curated</div><button onClick={() => setIsSidebarOpen(false)}><X size={24} /></button></div>
-          <div className="flex-1 overflow-y-auto no-scrollbar"><MovieShelf ids={favorites} favorites={favorites} toggleFavorite={toggleFavorite} isSidebar onOpenMovie={setSelectedMovie} /></div>
+          <div className="flex-1 overflow-y-auto no-scrollbar"><MovieShelf ids={favorites} favorites={favorites} toggleFavorite={toggleFavorite} isSidebar onOpenMovie={setSelectedMovie} sortBy={sortBy} /></div>
         </div>
       </div>
     </div>

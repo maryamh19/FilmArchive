@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Heart, Loader2, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   searchKeyword?: string;
@@ -9,9 +10,11 @@ interface Props {
   isSidebar?: boolean;
   isGrid?: boolean;
   onOpenMovie: (movie: any) => void;
+  sortBy?: 'year' | 'rating' | 'default';
 }
 
-export default function MovieShelf({ searchKeyword, ids, favorites, toggleFavorite, isSidebar, isGrid, onOpenMovie }: Props) {
+export default function MovieShelf({ searchKeyword, ids, favorites, toggleFavorite, isSidebar, isGrid, onOpenMovie, sortBy = 'default' }: Props) {
+  const { t } = useTranslation();
   const [movies, setMovies] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -62,16 +65,28 @@ export default function MovieShelf({ searchKeyword, ids, favorites, toggleFavori
     fetchData();
   }, [searchKeyword, JSON.stringify(ids), page, API_KEY]);
 
+  // --- SORTING LOGIC ---
+  const sortedMovies = useMemo(() => {
+    const list = [...movies];
+    if (sortBy === 'year') {
+      return list.sort((a, b) => parseInt(b.Year) - parseInt(a.Year));
+    }
+    if (sortBy === 'rating') {
+      return list.sort((a, b) => parseFloat(b.imdbRating) - parseFloat(a.imdbRating));
+    }
+    return list;
+  }, [movies, sortBy]);
+
   if (loading) return (
     <div className="flex items-center justify-center py-20 w-full animate-pulse">
       <Loader2 className="animate-spin mr-2" />
-      <span className="text-[10px] uppercase tracking-[0.3em]">Scanning Archives...</span>
+      <span className="text-[10px] uppercase tracking-[0.3em]">{t('scanning')}</span>
     </div>
   );
 
   if (movies.length === 0) return (
     <div className="py-10 text-center w-full opacity-40">
-      <p className="text-[10px] uppercase tracking-[0.3em]">No records found in this sector</p>
+      <p className="text-[10px] uppercase tracking-[0.3em]">{t('no_records')}</p>
     </div>
   );
 
@@ -86,7 +101,7 @@ export default function MovieShelf({ searchKeyword, ids, favorites, toggleFavori
   return (
     <div className="space-y-8">
       <div className={containerClass}>
-        {movies.map((movie) => (
+        {sortedMovies.map((movie) => (
           <div 
             key={movie.imdbID} 
             onClick={() => onOpenMovie(movie)} 
