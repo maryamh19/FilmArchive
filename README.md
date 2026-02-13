@@ -1,11 +1,16 @@
+# The Film Archives
 
-  # Landing Page Design
+A vintage-inspired web application for exploring, searching, and archiving classic cinema using the OMDB API.
 
-  This is a code for FILM ARCHIVE.
+## Features
+- 🌐 **Multi-language Support:** English, Spanish, French, and German.
+- 🔍 **Real-time Search:** Find movies instantly via the OMDB API.
+- ❤️ **Personal Archive:** Save favorite movies and create a watchlist.
+- 🎨 **Customization:** Toggle dark mode and visual grain effects.
 
-  ## Running the code
-
-  Run `npm i` to install the dependencies.
-
-  Run `npm run dev` to start the development server.
-  
+## Technologies Used
+- React + TypeScript
+- Vite
+- Tailwind CSS
+- i18next (Localization)
+- Lucide Icons
