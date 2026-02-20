@@ -24,7 +24,7 @@ It combines modern frontend engineering with immersive UI storytelling.
 
 
 ## ✨ Core Features
-🎞 Smart Movie Discovery
+Smart Movie Discovery
 
 Real-time movie search suggestions
 
@@ -96,35 +96,25 @@ lucide-react → Icons
 i18next → Localization
 
 OMDb API → Movie Data
-
-## 📂 Project Architecture
-src/
- ├ components/
- │ ├ MovieShelf
- │ ├ Modals
- │ ├ UI Elements
- │
- ├ assets/
- ├ i18n/
- ├ App.tsx
- ├ main.tsx
  
 ## ⚙️ Installation
 Clone Repository
+
 git clone https://github.com/maryamh19/FilmArchive.git
+
 cd FilmArchive
-Install Dependencies
+
+Install Dependencies: 
 npm install
-Run Development Server
+
+Run Development Server: 
 npm run dev
 
 ## 🔑 API Configuration
 
 Movie data is powered by OMDb API.
 
-If needed, update API key inside:
-
-App.tsx
+If needed, update API key inside: App.tsx
 
 ## 📈 Future Roadmap
 
