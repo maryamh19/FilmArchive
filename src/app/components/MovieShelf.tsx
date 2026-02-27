@@ -65,7 +65,7 @@ export default function MovieShelf({ searchKeyword, ids, favorites, toggleFavori
     fetchData();
   }, [searchKeyword, JSON.stringify(ids), page, API_KEY]);
 
-  // --- SORTING LOGIC ---
+  // --- sorting ---
   const sortedMovies = useMemo(() => {
     const list = [...movies];
     if (sortBy === 'year') {
@@ -129,7 +129,7 @@ export default function MovieShelf({ searchKeyword, ids, favorites, toggleFavori
         ))}
       </div>
 
-      {/* VINTAGE PAGINATION CONTROLS */}
+      {/* pagination control */}
       {searchKeyword && totalPages > 1 && (
         <div className="flex items-center justify-center gap-8 pt-10 border-t border-current/10">
           <button 

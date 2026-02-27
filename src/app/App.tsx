@@ -7,7 +7,7 @@ import {
   Bookmark, ShieldCheck, LogOut, Lock, KeyRound, Settings, Languages 
 } from 'lucide-react';
 
-// --- DECORATIVE FILTERS ---
+// --- Decorative filters---
 function GrainOverlay({ active }: { active: boolean }) {
   if (!active) return null;
   return (
@@ -23,7 +23,7 @@ function GrainOverlay({ active }: { active: boolean }) {
   );
 }
 
-// --- LOGIN COMPONENT ---
+// --- Login component ---
 function LoginTerminal({ onLogin }: { onLogin: () => void }) {
   const { t } = useTranslation();
   const [pass, setPass] = useState('');
@@ -66,7 +66,7 @@ function LoginTerminal({ onLogin }: { onLogin: () => void }) {
   );
 }
 
-// --- VINTAGE LANDING PAGE ---
+// --- Landing page ---
 function LandingPage({ onEnter }: { onEnter: () => void }) {
   return (
     <div className="fixed inset-0 z-[1000] bg-[#0a0908] flex flex-col items-center justify-center overflow-hidden">
@@ -85,7 +85,7 @@ function LandingPage({ onEnter }: { onEnter: () => void }) {
   );
 }
 
-// --- MOVIE MODAL ---
+// --- Movies shape ---
 function MovieModal({ movie, onClose, toggleFavorite, isFavorite, toggleWatchlist, isWatchlisted }: any) {
   if (!movie) return null;
   return (
@@ -110,7 +110,7 @@ function MovieModal({ movie, onClose, toggleFavorite, isFavorite, toggleWatchlis
   );
 }
 
-// --- RESTORED FOOTER ---
+// --- vintage stamp footer ---
 function Footer() {
   return (
     <footer className="bg-gradient-to-t from-[#0a0908] via-[#1a1612] to-[#1a1612]/50 border-t border-[#c4a484]/20 py-12 mt-20 relative z-10">
@@ -132,7 +132,7 @@ function Footer() {
   );
 }
 
-// --- CHANGE PASSWORD MODAL ---
+// --- change your passkey ---
 function ChangePassModal({ onClose }: { onClose: () => void }) {
   const [newPass, setNewPass] = useState('');
   const [status, setStatus] = useState<'idle' | 'saved'>('idle');
@@ -162,7 +162,7 @@ function ChangePassModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-// --- MAIN APP ---
+// ---whole main app---
 function App() {
   const { t, i18n } = useTranslation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -220,7 +220,7 @@ function App() {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // NEW UPDATED LANGUAGE TOGGLE: Cycles through en, es, fr, de
+  //languages english, spanish, french, german
   const toggleLanguage = () => {
     const langs = ['en', 'es', 'fr', 'de'];
     const currentIndex = langs.indexOf(i18n.language);
@@ -414,7 +414,7 @@ function App() {
 
       <Footer />
 
-      {/* CURATED SIDEBAR */}
+      {/* the sidebar */}
       <div className={`fixed top-0 right-0 h-full w-full sm:w-80 border-l z-[300] transform transition-transform duration-500 ${theme === 'dark' ? 'bg-[#14110e] border-[#5c3a1e]' : 'bg-[#ebe7de] border-[#dcd7cc]'} ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="p-6 h-full flex flex-col">
           <div className="flex justify-between items-center mb-8 border-b border-current/10 pb-4"><div className="flex items-center gap-2 uppercase tracking-widest font-bold text-xs"><Heart size={14} fill="currentColor" /> Curated</div><button onClick={() => setIsSidebarOpen(false)}><X size={24} /></button></div>
